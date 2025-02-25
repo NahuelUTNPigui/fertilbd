@@ -18,9 +18,3 @@ routerAdd("GET", "/hello/{name}", (e) => {
     return e.json(200, { "message": "Hello " + name })
 })
 
-onRecordCreateRequest((e)=>{
-    showBody(e)
-    e.next()
-},'users')
-
-
