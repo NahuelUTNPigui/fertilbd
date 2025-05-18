@@ -84,6 +84,152 @@ routerAdd("GET","/api/creciente/cabmax/{idcab}",(e)=>{
         return e.json(200,{
             result
         });
+        
     }
     
-})  
+})
+//Esto es peligroso pero por ahora va
+//Que deberia traer?
+//Animales (activos y muertos,lotes,rodeos,inseminaciones,srvicios,nacimientos,tratamientos,
+//observaciones,pesajes, tactos  )
+//Probablemente tenga quehacer un key value
+
+routerAdd("GET","/api/creciente/fullcab/{idcab}",(e)=>{
+    let idcab = e.request.pathValue("idcab")
+    const resultAnimales = arrayOf(new DynamicModel({
+        id:"",
+        caravana:"",
+        //fechatacto:"",
+        //fechaser:"",
+        //fechains:"",
+        active:0,
+        cab:""
+    }))
+    const resultObservaciones = arrayOf(new DynamicModel({
+        id:"",
+        animal:"",
+        fecha:""
+    }))
+    const resultPesaje = arrayOf(new DynamicModel({
+        id:"",
+        animal:"",
+        fecha:""
+    }))
+    const resultRodeos = arrayOf(new DynamicModel({
+        id:"",
+        nombre:""
+    }))
+    const resultLotes = arrayOf(new DynamicModel({
+        id:"",
+        nombre:""
+    }))
+    const resultServicios = arrayOf(new DynamicModel({
+        id:"",
+        fechadesde:"",
+        madre:"",
+        padres:""
+    }))
+    const resultInseminacion = arrayOf(new DynamicModel({
+        id:"",
+        fechainseminacion:"",
+        animal:"",
+        pajuela:""
+    }))
+    const resultTactos = arrayOf(new DynamicModel({
+        id:"",
+        animal:"",
+        fecha:""
+    }))
+    const resultTratamientos = arrayOf(new DynamicModel({
+        id:"",
+        animal:"",
+        fecha:""
+    }))
+    const resultNacimientos = arrayOf(new DynamicModel({
+        id:"",
+        madre:"",
+        fecha:""     
+    }))
+    try {
+
+        $app.db()
+            .newQuery(`SELECT id, caravana,active,cab FROM Animales where cab='${idcab}' and active = True`)
+            .all(resultAnimales) // throw an error on db failure
+        // lotes
+        $app.db()
+            .newQuery(`SELECT id, nombre, active,cab FROM lotes where cab='${idcab}' and active = True`)
+            .all(resultLotes) // throw an error on db failure
+        // rodeos
+        $app.db()
+            .newQuery(`SELECT id, nombre, active,cab FROM rodeos where cab='${idcab}' and active = True`)
+            .all(resultRodeos) // throw an error on db failure
+        // observaciones
+        $app.db()
+            .newQuery(`SELECT id, animal, fecha, active,cab FROM observaciones where cab='${idcab}' and active = True`)
+            .all(resultObservaciones) // throw an error on db failure
+        // tratamientos
+        $app.db()
+            .newQuery(`SELECT id, animal, fecha, active,cab FROM tratamientos where cab='${idcab}' and active = True`)
+            .all(resultTratamientos) // throw an error on db failure
+        // tactos
+        $app.db()
+            .newQuery(`SELECT id, animal, fecha, active,cab FROM tactos where cab='${idcab}' and active = True` )
+            .all(resultTactos) // throw an error on db failure
+        // nacimientos
+        $app.db()
+            .newQuery(`SELECT id, madre, fecha FROM nacimientos where cab='${idcab}' `)
+            .all(resultNacimientos) // throw an error on db failure
+        // servicios
+        $app.db()
+            .newQuery(`SELECT id, fechadesde, madre, padres,active,cab FROM servicios where cab='${idcab}' and active = True`)
+            .all(resultServicios) // throw an error on db failure
+        // inseminaciones
+        $app.db()
+            .newQuery(`SELECT id, animal, fechainseminacion, pajuela,active,cab FROM inseminacion where cab='${idcab}' and active = True`)
+            .all(resultInseminacion) // throw an error on db failure
+        
+        // pesajes
+        //los pesajes no tiene cabaña porque pertenecen al animal
+        $app.db()
+            .newQuery(`
+                SELECT p.id, p.animal, p.fecha,c.id as cab 
+                    FROM pesaje p
+                    inner join animales a on a.id = p.animal
+                    inner join cabs c on a.cab = c.id
+                    where c.id  ='${idcab}'
+            `)
+            .all(resultPesaje) // throw an error on db failure
+        return e.json(200,{
+            idcab,
+            animales:resultAnimales,
+            observaciones:resultObservaciones,
+            lotes:resultLotes,
+            rodeos:resultRodeos,
+            nacimientos:resultNacimientos,
+            pesajes:resultPesaje,
+            servicios:resultServicios,
+            inseminaciones:resultInseminacion,
+            tactos:resultTactos,
+            tratamientos:resultTratamientos,
+            message:"Todo bien"
+        });
+    }
+    catch(err){
+        console.log(JSON.stringify(err))
+        return e.json(500,{
+            idcab:"",
+            animales:[],
+            observaciones:[],
+            lotes:[],
+            rodeos:[],
+            nacimientos:[],
+            pesajes:[],
+            servicios:[],
+            inseminaciones:[],
+            tactos:[],
+            tratamientos:[],
+            message:JSON.stringify(err)
+        });
+    }
+    
+})
