@@ -6,3 +6,9 @@ pb2
 # la info
 pb_data
 pb_public
+*.pem
+saws
+nngrok
+ngrok.yml
+testx   
+*.json
