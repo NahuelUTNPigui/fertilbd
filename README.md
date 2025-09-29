@@ -7,4 +7,4 @@ Debes descargar el ejecutable pocketbase con la version indicada en el archivo v
 
 
 scp -i  nahuelaws.pem pb ubuntu@35.171.116.2:/home/ubuntu/fertil
-scp  pb ubuntu@35.171.116.2:/home/ubuntu/fertil
+
