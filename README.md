@@ -3,8 +3,6 @@ Debes descargar el ejecutable pocketbase con la version indicada en el archivo v
 * Ejecutar el comando
 ./pocketbase serve --http="127.0.0.1:9991"
 
-* Para trasnferir files
-
-
-scp -i  nahuelaws.pem pb ubuntu@35.171.116.2:/home/ubuntu/fertil
-
+* Para que ande correctamente
+Hace falta la carpeta pb_public
+El archivo pb que es pocketbase 0.25.5
